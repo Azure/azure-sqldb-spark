@@ -25,13 +25,14 @@ package com.microsoft.azure.sqldb.spark.bulkcopy;
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Public class for users to add column metadata manually
  */
 public class BulkCopyMetadata implements Serializable {
 
-    private HashMap<Integer, ColumnMetadata> metadata;
+    private Map<Integer, ColumnMetadata> metadata;
 
     public BulkCopyMetadata() {
         this.metadata = new HashMap<>();
@@ -56,7 +57,7 @@ public class BulkCopyMetadata implements Serializable {
         addColumnMetadataInternal(column, name, jdbcType, precision, scale, dateTimeFormatter);
     }
 
-    HashMap<Integer, ColumnMetadata> getMetadata() {
+    Map<Integer, ColumnMetadata> getMetadata() {
         return metadata;
     }
 

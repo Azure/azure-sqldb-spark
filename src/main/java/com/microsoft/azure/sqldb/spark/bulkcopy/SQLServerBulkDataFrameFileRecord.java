@@ -25,9 +25,11 @@ package com.microsoft.azure.sqldb.spark.bulkcopy;
 import com.microsoft.azure.sqldb.spark.Logging;
 import com.microsoft.sqlserver.jdbc.ISQLServerBulkRecord;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import com.microsoft.sqlserver.jdbc.SQLServerResource;
 import org.apache.spark.sql.Row;
 import scala.collection.Iterator;
 
+import java.sql.JDBCType;
 import java.sql.Types;
 import java.text.MessageFormat;
 import java.time.OffsetTime;
@@ -108,8 +110,13 @@ public class SQLServerBulkDataFrameFileRecord extends Logging implements ISQLSer
                         break;
                     }
                 }
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+            } catch (IllegalArgumentException exception) {
+                String value = "'" + row.get(pair.getKey() - 1) + "'";
+                MessageFormat form = new MessageFormat(getSQLServerExceptionErrorMsg("R_errorConvertingValue"));
+
+                throw new SQLServerException(form.format(new Object[]{value, JDBCType.valueOf(cm.getColumnType()).getName()}), null, 0, exception);
+            } catch (ArrayIndexOutOfBoundsException exception) {
+                throw new SQLServerException(getSQLServerExceptionErrorMsg("R_schemaMismatch"), exception);
             }
         }
 
@@ -129,5 +136,9 @@ public class SQLServerBulkDataFrameFileRecord extends Logging implements ISQLSer
     @Override
     public boolean next() throws SQLServerException {
         return iterator.hasNext();
+    }
+
+    private String getSQLServerExceptionErrorMsg(String type) {
+        return SQLServerResource.getBundle("com.microsoft.sqlserver.jdbc.SQLServerResource").getString(type);
     }
 }
