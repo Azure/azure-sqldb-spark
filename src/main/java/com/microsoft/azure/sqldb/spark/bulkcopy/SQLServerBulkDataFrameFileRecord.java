@@ -37,6 +37,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Class to allow SQLServerBulkCopy to write data to SQL Server Tables from Spark DataFrames
+ */
 public class SQLServerBulkDataFrameFileRecord extends Logging implements ISQLServerBulkRecord, java.lang.AutoCloseable {
 
     private Iterator<Row> iterator;
@@ -82,6 +85,8 @@ public class SQLServerBulkDataFrameFileRecord extends Logging implements ISQLSer
         Row row = iterator.next();
         Object[] rowData = new Object[row.length()];
 
+        // Keys of the columnMetadata is a database table column with index starting from 1.
+        // rowData is an array with index starting from 0.
         for (Map.Entry<Integer, ColumnMetadata> pair : columnMetadata.entrySet()) {
             ColumnMetadata cm  = pair.getValue();
 

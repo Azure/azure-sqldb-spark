@@ -25,6 +25,9 @@ package com.microsoft.azure.sqldb.spark
 import org.apache.spark.annotation.DeveloperApi
 import org.apache.spark.sql.SQLContext
 
+/**
+  * Implicit querying functions added to SQLContext
+  */
 package object query {
 
   /**

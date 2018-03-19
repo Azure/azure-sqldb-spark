@@ -28,6 +28,9 @@ import com.microsoft.azure.sqldb.spark.bulkcopy.BulkCopyMetadata
 import com.microsoft.azure.sqldb.spark.config.{Config, SqlDBConfig}
 import com.microsoft.sqlserver.jdbc.SQLServerBulkCopyOptions
 
+/**
+  * Helper and utility methods used for setting up a Bulk Copy transaction.
+  */
 private[spark] object BulkCopyUtils {
 
   /**

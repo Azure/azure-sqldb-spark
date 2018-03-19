@@ -29,6 +29,9 @@ import com.microsoft.azure.sqldb.spark.LoggingTrait
 import com.microsoft.azure.sqldb.spark.config.{Config, SqlDBConfig}
 import org.apache.spark.sql.DataFrameWriter
 
+/**
+  * Implicit functions for DataFrameWriter
+  */
 private[spark] case class DataFrameWriterFunctions(@transient writer: DataFrameWriter[_]) extends LoggingTrait {
 
   /**

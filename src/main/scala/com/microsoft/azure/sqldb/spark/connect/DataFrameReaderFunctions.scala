@@ -29,6 +29,9 @@ import com.microsoft.azure.sqldb.spark.LoggingTrait
 import com.microsoft.azure.sqldb.spark.config.{Config, SqlDBConfig}
 import org.apache.spark.sql.{DataFrame, DataFrameReader}
 
+/**
+  * Implicit functions for DataFrameReader
+  */
 private[spark] case class DataFrameReaderFunctions(@transient reader: DataFrameReader) extends LoggingTrait {
 
   /**

@@ -27,6 +27,9 @@ import java.util.Properties
 
 import com.microsoft.azure.sqldb.spark.config.{Config, SqlDBConfig}
 
+/**
+  * Helper and utility methods used for setting up or using a connection
+  */
 private[spark] object ConnectionUtils {
 
   /**

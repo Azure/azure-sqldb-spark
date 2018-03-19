@@ -25,6 +25,9 @@ package com.microsoft.azure.sqldb.spark
 import org.apache.spark.annotation.DeveloperApi
 import org.apache.spark.sql._
 
+/**
+  * Implicit functions added to DataFrameReader, DataFrameWriter and DataFrame objects
+  */
 package object connect {
 
   /**

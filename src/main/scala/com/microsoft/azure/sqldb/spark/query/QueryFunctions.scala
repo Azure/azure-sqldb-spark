@@ -30,6 +30,9 @@ import com.microsoft.azure.sqldb.spark.config.{Config, SqlDBConfig}
 import com.microsoft.azure.sqldb.spark.connect._
 import org.apache.spark.sql.{DataFrame, SQLContext}
 
+/**
+  * Implicit functions for SQLContext
+  */
 private[spark] case class QueryFunctions(@transient sqlContext: SQLContext) extends LoggingTrait {
 
   /**

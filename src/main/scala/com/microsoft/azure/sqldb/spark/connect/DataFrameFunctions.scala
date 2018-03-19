@@ -29,7 +29,9 @@ import com.microsoft.azure.sqldb.spark.config.{Config, SqlDBConfig}
 import com.microsoft.sqlserver.jdbc.SQLServerBulkCopy
 import org.apache.spark.sql.{DataFrame, Row}
 
-
+/**
+  * Implicit functions for DataFrame
+  */
 private[spark] case class DataFrameFunctions[T](@transient dataFrame: DataFrame) extends LoggingTrait {
 
   /**
