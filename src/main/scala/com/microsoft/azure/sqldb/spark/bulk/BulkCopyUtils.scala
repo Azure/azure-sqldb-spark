@@ -24,14 +24,17 @@ package com.microsoft.azure.sqldb.spark.bulk
 
 import java.sql.{Connection, ResultSetMetaData}
 
+import com.microsoft.azure.sqldb.spark.LoggingTrait
 import com.microsoft.azure.sqldb.spark.bulkcopy.BulkCopyMetadata
 import com.microsoft.azure.sqldb.spark.config.{Config, SqlDBConfig}
 import com.microsoft.sqlserver.jdbc.SQLServerBulkCopyOptions
 
+import scala.util.control.NonFatal
+
 /**
   * Helper and utility methods used for setting up a Bulk Copy transaction.
   */
-private[spark] object BulkCopyUtils {
+private[spark] object BulkCopyUtils extends LoggingTrait {
 
   /**
     * Database table columns start at index 1.
@@ -123,5 +126,25 @@ private[spark] object BulkCopyUtils {
     val statement = s"SELECT TOP 0 * FROM $table"
 
     connection.createStatement().executeQuery(statement).getMetaData
+  }
+
+  /**
+    * Retrieves transaction support from remote database
+    *
+    * @param connection the active JDBC connection
+    * @return true if the connected database support transactions, false otherwise
+    */
+  def getTransactionSupport(connection: Connection): Boolean ={
+    var isolationLevel = Connection.TRANSACTION_NONE
+    try {
+      val metadata = connection.getMetaData
+      if (metadata.supportsTransactions){
+        isolationLevel = metadata.getDefaultTransactionIsolation
+      }
+    } catch {
+      case NonFatal(e) => logWarning("Exception while detecting transaction support", e)
+    }
+
+    isolationLevel != Connection.TRANSACTION_NONE
   }
 }

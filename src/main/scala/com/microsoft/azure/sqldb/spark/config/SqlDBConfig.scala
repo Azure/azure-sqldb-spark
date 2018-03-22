@@ -95,7 +95,7 @@ object SqlDBConfig {
 
   // Bulk Copy API Default Settings
   val BulkCopyBatchSizeDefault = 0
-  val BulkCopyTimeoutDefault = 60
+  val BulkCopyTimeoutDefault = 60 //seconds
   val BulkCopyCheckConstraintsDefault = false
   val BulkCopyFireTriggersDefault = false
   val BulkCopyKeepIdentityDefault = false

@@ -22,6 +22,8 @@
   */
 package com.microsoft.azure.sqldb.spark.connect
 
+import java.sql.{Connection, SQLException}
+
 import com.microsoft.azure.sqldb.spark.bulkcopy.{BulkCopyMetadata, SQLServerBulkDataFrameFileRecord}
 import com.microsoft.azure.sqldb.spark.LoggingTrait
 import com.microsoft.azure.sqldb.spark.bulk.BulkCopyUtils
@@ -54,8 +56,18 @@ private[spark] case class DataFrameFunctions[T](@transient dataFrame: DataFrame)
     * @param metadata User specified bulk copy metadata.
     */
   private def bulkCopy(config: Config, iterator: Iterator[Row], metadata: BulkCopyMetadata): Unit = {
+    var connection: Connection = null
+    try {
+      connection = ConnectionUtils.getConnection(config)
+    } catch {
+      case e: ClassNotFoundException =>
+        logError("JDBC driver not found in class path", e)
+        throw e
+      case e1: SQLException =>
+        logError("Connection cannot be established to the database", e1)
+        throw e1
+    }
 
-    val connection = ConnectionUtils.getConnection(config)
     val dbTable = config.get[String](SqlDBConfig.DBTable).get
 
     // Retrieves column metadata from external database table if user does not specify.
@@ -63,17 +75,53 @@ private[spark] case class DataFrameFunctions[T](@transient dataFrame: DataFrame)
       if (metadata != null) {
         metadata
       } else {
-        val resultSetMetaData = BulkCopyUtils.getTableColumns(dbTable, connection)
-        BulkCopyUtils.createBulkCopyMetadata(resultSetMetaData)
+        try {
+          val resultSetMetaData = BulkCopyUtils.getTableColumns(dbTable, connection)
+          BulkCopyUtils.createBulkCopyMetadata(resultSetMetaData)
+        } catch {
+          case e: SQLException =>
+            logError("Column metadata not specified and cannot retrieve metadata from database", e)
+            throw e
+        }
       }
 
-    val fileRecord = new SQLServerBulkDataFrameFileRecord(iterator, bulkCopyMetadata)
+    var committed = false
+    val supportsTransactions = BulkCopyUtils.getTransactionSupport(connection)
+    try {
+      if (supportsTransactions){
+        connection.setAutoCommit(false)
+      }
 
-    val sqlServerBulkCopy = new SQLServerBulkCopy(connection)
-    sqlServerBulkCopy.setDestinationTableName(dbTable)
-    sqlServerBulkCopy.setBulkCopyOptions(BulkCopyUtils.getBulkCopyOptions(config))
+      val fileRecord = new SQLServerBulkDataFrameFileRecord(iterator, bulkCopyMetadata)
+      val sqlServerBulkCopy = new SQLServerBulkCopy(connection)
 
-    sqlServerBulkCopy.writeToServer(fileRecord)
-    connection.close()
+      sqlServerBulkCopy.setDestinationTableName(dbTable)
+      sqlServerBulkCopy.setBulkCopyOptions(BulkCopyUtils.getBulkCopyOptions(config))
+      sqlServerBulkCopy.writeToServer(fileRecord)
+
+      if (supportsTransactions){
+        connection.commit()
+      }
+      committed = true
+    } catch {
+      case e: SQLException =>
+        if (!committed && supportsTransactions){
+          logError("An error occurred while writing to database, attempting rollback", e)
+        }
+        throw e
+    } finally {
+      if (!committed){
+        if (supportsTransactions){
+          connection.rollback()
+        }
+        connection.close()
+      } else {
+        try {
+          connection.close()
+        } catch {
+          case e: Exception => logWarning("Transaction succeeded, but closing failed", e)
+        }
+      }
+    }
   }
 }
