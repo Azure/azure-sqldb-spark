@@ -115,13 +115,24 @@ public class SQLServerBulkDataFrameFileRecord extends Logging implements ISQLSer
                         break;
                     }
                 }
-            } catch (IllegalArgumentException exception) {
+            } catch (IllegalArgumentException illegalArgumentException) {
                 String value = "'" + row.get(pair.getKey() - 1) + "'";
                 MessageFormat form = new MessageFormat(getSQLServerExceptionErrorMsg("R_errorConvertingValue"));
+                String errText = form.format(new Object[]{value, JDBCType.valueOf(cm.getColumnType()).getName()});
 
-                throw new SQLServerException(form.format(new Object[]{value, JDBCType.valueOf(cm.getColumnType()).getName()}), null, 0, exception);
-            } catch (ArrayIndexOutOfBoundsException exception) {
-                throw new SQLServerException(getSQLServerExceptionErrorMsg("R_schemaMismatch"), exception);
+                try {
+                    throw SQLServerExceptionReflection.throwSQLServerException(errText, null, 0, illegalArgumentException);
+                } catch (Exception e) {
+                    throw new IllegalArgumentException(errText, illegalArgumentException);
+                }
+            } catch (ArrayIndexOutOfBoundsException arrayOutOfBoundsException) {
+                String errText = getSQLServerExceptionErrorMsg("R_schemaMismatch");
+
+                try {
+                    throw SQLServerExceptionReflection.throwSQLServerException(errText, arrayOutOfBoundsException);
+                } catch (Exception e) {
+                    throw new ArrayIndexOutOfBoundsException(errText);
+                }
             }
         }
 
