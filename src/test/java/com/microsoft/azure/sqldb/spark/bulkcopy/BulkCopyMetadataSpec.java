@@ -47,16 +47,15 @@ public class BulkCopyMetadataSpec {
     @Test
     public void addColumnMetadataTest() {
         String columnName = "testColumn";
-        int column = 1;
         int jdbcType = Types.DOUBLE;
         int precision = 15;
         int scale = 5;
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
-        bulkCopyMetadata.addColumnMetadata(column, columnName, jdbcType, precision, scale);
+        bulkCopyMetadata.addColumnMetadata(1, columnName, jdbcType, precision, scale);
         assertEquals(1, bulkCopyMetadata.getMetadata().size());
 
-        bulkCopyMetadata.addColumnMetadata(column, columnName, jdbcType, precision, scale, dateTimeFormatter);
+        bulkCopyMetadata.addColumnMetadata(2, columnName, jdbcType, precision, scale, dateTimeFormatter);
         assertEquals(2, bulkCopyMetadata.getMetadata().size());
     }
 }
