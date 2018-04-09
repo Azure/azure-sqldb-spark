@@ -24,6 +24,7 @@ package com.microsoft.azure.sqldb.spark.connect
 
 import java.util.Properties
 
+import scala.language.existentials
 import com.microsoft.azure.sqldb.spark.connect.ConnectionUtils._
 import com.microsoft.azure.sqldb.spark.LoggingTrait
 import com.microsoft.azure.sqldb.spark.config.{Config, SqlDBConfig}

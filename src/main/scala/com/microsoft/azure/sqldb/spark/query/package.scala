@@ -22,6 +22,7 @@
   */
 package com.microsoft.azure.sqldb.spark
 
+import scala.language.implicitConversions
 import org.apache.spark.annotation.DeveloperApi
 import org.apache.spark.sql.SQLContext
 

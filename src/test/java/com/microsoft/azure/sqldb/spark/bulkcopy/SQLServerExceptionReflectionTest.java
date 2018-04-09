@@ -28,7 +28,7 @@ import org.junit.Test;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 
-public class SQLServerExceptionReflectionSpec {
+public class SQLServerExceptionReflectionTest {
 
     @Test(expected = SQLServerException.class)
     public void throwSQLServerExceptionTest1() throws SQLServerException {
