@@ -111,8 +111,6 @@ object SqlDBConfig {
 
   // Mandatory fields to construct a Config
   val required = List(
-    User,
-    Password,
     DatabaseName,
     URL
   )
