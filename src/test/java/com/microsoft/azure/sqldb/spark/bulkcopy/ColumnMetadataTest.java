@@ -22,40 +22,27 @@
  */
 package com.microsoft.azure.sqldb.spark.bulkcopy;
 
-import org.junit.Before;
 import org.junit.Test;
-
 import java.sql.Types;
 import java.time.format.DateTimeFormatter;
-
 import static junit.framework.Assert.assertEquals;
 
-public class BulkCopyMetadataSpec {
-
-    BulkCopyMetadata bulkCopyMetadata;
-
-    @Before
-    public void beforeEach() {
-        bulkCopyMetadata = new BulkCopyMetadata();
-    }
+public class ColumnMetadataTest {
 
     @Test
     public void constructorTest(){
-        assertEquals(0, bulkCopyMetadata.getMetadata().size());
-    }
-
-    @Test
-    public void addColumnMetadataTest() {
         String columnName = "testColumn";
-        int jdbcType = Types.DOUBLE;
-        int precision = 15;
-        int scale = 5;
+        int columnType = Types.TIME;
+        int precision = 50;
+        int scale = 0;
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
-        bulkCopyMetadata.addColumnMetadata(1, columnName, jdbcType, precision, scale);
-        assertEquals(1, bulkCopyMetadata.getMetadata().size());
+        ColumnMetadata columnMetadata = new ColumnMetadata(columnName, columnType, precision, scale, dateTimeFormatter);
 
-        bulkCopyMetadata.addColumnMetadata(2, columnName, jdbcType, precision, scale, dateTimeFormatter);
-        assertEquals(2, bulkCopyMetadata.getMetadata().size());
+        assertEquals(columnName, columnMetadata.getColumnName());
+        assertEquals(columnType, columnMetadata.getColumnType());
+        assertEquals(precision, columnMetadata.getPrecision());
+        assertEquals(scale, columnMetadata.getScale());
+        assertEquals(dateTimeFormatter, columnMetadata.getDateTimeFormatter());
     }
 }

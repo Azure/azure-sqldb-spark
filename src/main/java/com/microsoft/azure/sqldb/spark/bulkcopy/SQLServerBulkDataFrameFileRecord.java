@@ -22,7 +22,6 @@
  */
 package com.microsoft.azure.sqldb.spark.bulkcopy;
 
-import com.microsoft.azure.sqldb.spark.Logging;
 import com.microsoft.sqlserver.jdbc.ISQLServerBulkRecord;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import com.microsoft.sqlserver.jdbc.SQLServerResource;
@@ -40,7 +39,7 @@ import java.util.Set;
 /**
  * Class to allow SQLServerBulkCopy to write data to SQL Server Tables from Spark DataFrames
  */
-public class SQLServerBulkDataFrameFileRecord extends Logging implements ISQLServerBulkRecord, java.lang.AutoCloseable {
+public class SQLServerBulkDataFrameFileRecord implements ISQLServerBulkRecord, java.lang.AutoCloseable {
 
     private Iterator<Row> iterator;
 

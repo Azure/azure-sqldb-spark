@@ -30,7 +30,7 @@ import java.time.format.DateTimeFormatter;
 
 import static junit.framework.Assert.assertEquals;
 
-public class SQLServerBulkDataFrameFileRecordSpec {
+public class SQLServerBulkDataFrameFileRecordTest {
 
     private SQLServerBulkDataFrameFileRecord fileRecord;
 

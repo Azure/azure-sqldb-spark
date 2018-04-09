@@ -1,5 +1,7 @@
 # Spark connector for Azure SQL Databases and SQL Server
 
+[![Build Status](https://travis-ci.org/Azure/azure-sqldb-spark.svg?branch=master)](https://travis-ci.org/Azure/azure-sqldb-spark)
+
 The Spark connector for [Azure SQL Database](https://azure.microsoft.com/en-us/services/sql-database/) and [SQL Server](https://www.microsoft.com/en-us/sql-server/default.aspx) enables SQL databases, including Azure SQL Databases and SQL Server, to act as input data source or output data sink for Spark jobs. It allows you to utilize real time transactional data in big data analytics and persist results for adhoc queries or reporting. 
 
 Comparing to the built-in Spark connector, this connector provides the ability to bulk insert data into SQL databases. It can outperform row by row insertion with 10x to 20x faster performance. The Spark connector for Azure SQL Databases and SQL Server also supports AAD authentication. It allows you securely connecting to your Azure SQL databases from Azure Databricks using your AAD account. It provides similar interfaces with the built-in JDBC connector. It is easy to migrate your existing Spark jobs to use this new connector.

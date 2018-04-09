@@ -27,20 +27,20 @@ import com.microsoft.azure.sqldb.spark.SqlDBSpark
 class ConfigSpec extends SqlDBSpark {
 
   it should "throw IllegalArgumentException if required properties aren't met" in {
-    a [IllegalArgumentException] should be thrownBy {
+    an [IllegalArgumentException] should be thrownBy {
       Config(Map("url" -> "mysql.database.windows.net"))
     }
   }
 
   it should "throw IllegalArgumentException if queryCustom and dbTable are both stated" in {
-    a [IllegalArgumentException] should be thrownBy {
+    an [IllegalArgumentException] should be thrownBy {
       Config(Map(
         "url"          -> "mysql.database.windows.net",
-        "databaseName" -> "",
-        "user"         -> "",
-        "password"     -> "",
-        "dbTable"      -> "",
-        "QueryCustom"  -> ""
+        "databaseName" -> "MyDatabase",
+        "user"         -> "MyUsername",
+        "password"     -> "**********",
+        "dbTable"      -> "MyDBTable",
+        "QueryCustom"  -> "MyQueryCustom"
       ))
     }
   }
