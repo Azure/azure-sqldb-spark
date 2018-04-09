@@ -41,5 +41,5 @@ package object query {
     */
   @DeveloperApi
   implicit def toQueryFunctions(sqlContext: SQLContext): QueryFunctions = QueryFunctions(sqlContext)
-  
+
 }

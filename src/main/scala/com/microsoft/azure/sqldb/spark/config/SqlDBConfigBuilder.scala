@@ -22,7 +22,7 @@
   */
 package com.microsoft.azure.sqldb.spark.config
 
-import com.microsoft.azure.sqldb.spark.config.Config._
+import com.microsoft.azure.sqldb.spark.config.Config.Property
 
 case class SqlDBConfigBuilder(props: Map[Property, Any] = Map()) extends {
 
