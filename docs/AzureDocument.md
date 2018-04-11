@@ -119,12 +119,12 @@ import com.microsoft.azure.sqldb.spark.config.Config
 import com.microsoft.azure.sqldb.spark.connect._
 
 val config = Config(Map(
-  "url"                    -> "mysqlserver.database.windows.net",
-  "databaseName"           -> "MyDatabase",
-  "user"                   -> "username ",
-  "password"               -> "*********",
-  "authentication"           -> "ActiveDirectoryPassword",
-  "encrypt"                -> "true"
+  "url"            -> "mysqlserver.database.windows.net",
+  "databaseName"   -> "MyDatabase",
+  "user"           -> "username ",
+  "password"       -> "*********",
+  "authentication" -> "ActiveDirectoryPassword",
+  "encrypt"        -> "true"
 ))
 
 val collection = sqlContext.read.SqlDB(config)
@@ -142,11 +142,11 @@ import com.microsoft.azure.sqldb.spark.config.Config
 import com.microsoft.azure.sqldb.spark.connect._
 
 val config = Config(Map(
-  "url"                    -> "mysqlserver.database.windows.net",
-  "databaseName"           -> "MyDatabase",
-  "accessToken"             -> "access_token ",
-  "hostNameInCertificate"     -> "*.database.windows.net",
-  "encrypt"                -> "true"
+  "url"                   -> "mysqlserver.database.windows.net",
+  "databaseName"          -> "MyDatabase",
+  "accessToken"           -> "access_token ",
+  "hostNameInCertificate" -> "*.database.windows.net",
+  "encrypt"               -> "true"
 ))
 
 val collection = sqlContext.read.SqlDB(config)
