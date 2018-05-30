@@ -20,6 +20,7 @@
         <scala.binary.version>2.11</scala.binary.version>
         <spark.version>2.2.1</spark.version>
         <project.scm.id>github</project.scm.id>
+        <!--<scm.repo.owner>foo</scm.repo.owner>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <scm>
