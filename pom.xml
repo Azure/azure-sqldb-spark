@@ -6,7 +6,7 @@
     <groupId>com.microsoft.azure</groupId>
     <artifactId>azure-sqldb-spark</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Spark Connector for Microsoft Azure SQL Database and SQL Server</description>
     <licenses>
@@ -20,7 +20,7 @@
         <scala.binary.version>2.11</scala.binary.version>
         <spark.version>2.2.1</spark.version>
         <project.scm.id>github</project.scm.id>
-        <!--<scm.repo.owner>foo</scm.repo.owner>-->
+        <scm.repo.owner>azure</scm.repo.owner>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <scm>
