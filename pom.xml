@@ -16,13 +16,24 @@
         </license>
     </licenses>
     <properties>
+        <scala.version>2.11.8</scala.version>
+        <scala.binary.version>2.11</scala.binary.version>
+        <spark.version>2.2.1</spark.version>
+        <project.scm.id>github</project.scm.id>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <scm>
+        <!-- Add scm.repo.owner to the properties above or specify them on the command line -->
+        <connection>scm:git:https://github.com/${scm.repo.owner}/azure-sqldb-spark.git</connection>
+        <developerConnection>scm:git:git@github.com:${scm.repo.owner}/azure-sqldb-spark.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/${scm.repo.owner}/azure-sqldb-spark</url>
+    </scm>
     <dependencies>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>2.11.8</version>
+            <version>${scala.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -32,13 +43,13 @@
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.11</artifactId>
-            <version>2.2.1</version>
+            <artifactId>spark-core_${scala.binary.version}</artifactId>
+            <version>${spark.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.11</artifactId>
-            <version>2.2.1</version>
+            <artifactId>spark-sql_${scala.binary.version}</artifactId>
+            <version>${spark.version}</version>
         </dependency>
         <dependency>
             <groupId>org.scalactic</groupId>
@@ -47,7 +58,7 @@
         </dependency>
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
+            <artifactId>scalatest_${scala.binary.version}</artifactId>
             <version>3.0.4</version>
             <scope>test</scope>
         </dependency>
@@ -214,6 +225,28 @@
                   </goals>
                 </execution>
               </executions>
+            </plugin>
+            <plugin>
+                <groupId>de.jutzig</groupId>
+                <artifactId>github-release-plugin</artifactId>
+                <version>1.1.1</version>
+                <configuration>
+                    <description>azure-sqldb-spark</description>
+                    <releaseName>${project.version}</releaseName>
+                    <tag>${project.version}</tag>
+
+                    <!-- If your project has additional artifacts, such as ones produced by
+                         the maven-assembly-plugin, you can define the following
+                         (requires version 1.1.1 of the plugin or higher): -->
+                    <fileSets>
+                        <fileSet>
+                            <directory>${project.build.directory}</directory>
+                            <includes>
+                                <include>${project.artifactId}*.jar</include>
+                            </includes>
+                        </fileSet>
+                    </fileSets>
+                </configuration>
             </plugin>
         </plugins>
     </build>
