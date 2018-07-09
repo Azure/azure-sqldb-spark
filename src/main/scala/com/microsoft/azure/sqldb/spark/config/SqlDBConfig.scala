@@ -94,7 +94,7 @@ object SqlDBConfig {
   val BulkCopyAllowEncryptedValueModifications = "bulkCopyAllowEncryptedValueModifications"
 
   // Bulk Copy API Default Settings
-  val BulkCopyBatchSizeDefault = 0
+  val BulkCopyBatchSizeDefault = 5000
   val BulkCopyTimeoutDefault = 60 //seconds
   val BulkCopyCheckConstraintsDefault = false
   val BulkCopyFireTriggersDefault = false
