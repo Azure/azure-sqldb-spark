@@ -52,10 +52,9 @@ class SQLSinkTest extends StreamTest with SharedSQLContext {
     )
     var stream: DataStreamWriter[Row] = null
     val input = MemoryStream[String]
-    input.addData("1", "2", "3", "4")
+    input.addData("1", "2", "3", "4", "5", "6", "7", "8")
     var df = input.toDF().withColumnRenamed("value", "input")
 
-    //val df = createReader("/sqltestdata")
     //TODO: Create Util functions to create SQL DB, table and truncate it and call the functions here
     withTempDir { checkpointDir =>
       config += ("checkpointLocation" -> checkpointDir.getCanonicalPath)  //Adding Checkpoint Location
@@ -68,18 +67,12 @@ class SQLSinkTest extends StreamTest with SharedSQLContext {
 
     try {
       failAfter(streamingTimeout){
-        Thread.sleep(100)
-        //streamStart.processAllAvailable()
+        streamStart.processAllAvailable()
       }
-      //var testDF = spark.read.sqlDB(Config(config)).as[String].select("value").map(_.toInt)
-      checkDatasetUnorderly(spark.read.sqlDB(Config(config)).select($"input").as[String].map(_.toInt), 1, 2, 3, 4)
+      checkDatasetUnorderly(spark.read.sqlDB(Config(config)).select($"input").as[String].map(_.toInt), 1, 2, 3, 4, 5, 6, 7, 8)
     } finally {
       streamStart.stop()
     }
-
-    //val df: DataFrame =
-
-    //TODO: Read data from SQL DB and check if it matches the data written (see EH implementation)
   }
 
   /*private def createWriter(inputDF: DataFrame, sqlConfig: AzureSQLConfig, withOutputMode: Option[OutputMode]): StreamingQuery = {
