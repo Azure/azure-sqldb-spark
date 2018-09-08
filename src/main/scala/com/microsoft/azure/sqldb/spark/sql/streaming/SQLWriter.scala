@@ -57,7 +57,6 @@ private[spark] object SQLWriter extends Logging {
     var writeConfig = Config(parameters)
     val url = writeConfig.get[String](SqlDBConfig.URL).get    //TODO: If URL is not specified, try to construct one
     val db = writeConfig.get[String](SqlDBConfig.DatabaseName).get
-    val properties = createConnectionProperties(writeConfig)
     var createTable = false
     val table = writeConfig.get[String](SqlDBConfig.DBTable).getOrElse(
       //createTable = true
@@ -70,9 +69,6 @@ private[spark] object SQLWriter extends Logging {
     //Using regular write
     Class.forName(DRIVER_NAME)
     connection = DriverManager.getConnection(createJDBCUrl(url, Some(port))+";database="+db, user, password)
-    if(connection.isClosed){
-      val test = 1
-    }
 
     //TODO: Using Bulk Copy
     /*val bulkCopyConfig = Config(Map(
@@ -107,45 +103,45 @@ private[spark] object SQLWriter extends Logging {
         })
       }
 
-    var sql = "INSERT INTO " + table + " (" + colNames.substring(0, colNames.length-1) + " , partitionid" + ")" + " VALUES (" + values.substring(0, values.length-1) + ",?" + ");"
+      //var sql = "INSERT INTO " + table + " (" + colNames.substring(0, colNames.length-1) + " , partitionid" + ")" + " VALUES (" + values.substring(0, values.length-1) + ",?" + ");"
+      var sql = "INSERT INTO " + table + " (" + colNames.substring(0, colNames.length-1) + ")" + " VALUES (" + values.substring(0, values.length-1) + ");"
 
-    queryExecution.toRdd.foreachPartition(iter => {
-      val ps = connection.prepareStatement(sql)
-      iter.foreach(row => {
-        val pid = TaskContext.get().partitionId()
-        if(ps != null) {
-          try{
-            var i = 0
-            for(e <- schemaDatatype) {
-              val testVar = row.getString(i)
-              println("Value: " + testVar + " ; i: " + i)
-              e match {
-                case "ByteType" => ps.setByte(i+1, row.getByte(i))
-                case "ShortType" => ps.setShort(i+1,row.getShort(i))
-                case "IntegerType" => ps.setInt(i+1, row.getInt(i))
-                case "LongType" => ps.setLong(i+1, row.getLong(i))
-                case "FloatType" => ps.setFloat(i+1, row.getFloat(i))
-                case "DoubleType" => ps.setDouble(i+1, row.getDouble(i))
-                //      case "DecimalType" => statement.setBigDecimal(i, )   //TODO: try to use getAccessor and find a similar method in statement
-                case "StringType" => ps.setString(i+1, row.getString(i))
-                case "BinaryType" => ps.setBytes(i+1, row.getBinary(i))
-                case "BooleanType" => ps.setBoolean(i+1, row.getBoolean(i))
-                //      case "TimestamType" => statement.setTimestamp(i+1, row.get.getTimestamp(i))
-                //      case "DateType" => statement.setDate(i+1, row.getDate(i))
+      queryExecution.toRdd.foreachPartition(iter => {
+        val ps = connection.prepareStatement(sql)
+        iter.foreach(row => {
+          val pid = TaskContext.get().partitionId()
+          if(ps != null) {
+            try{
+              var i = 0
+              for(e <- schemaDatatype) {
+                val testVar = row.getString(i)
+                println("Value: " + testVar + " ; i: " + i)
+                e match {
+                  case "ByteType" => ps.setByte(i+1, row.getByte(i))
+                  case "ShortType" => ps.setShort(i+1,row.getShort(i))
+                  case "IntegerType" => ps.setInt(i+1, row.getInt(i))
+                  case "LongType" => ps.setLong(i+1, row.getLong(i))
+                  case "FloatType" => ps.setFloat(i+1, row.getFloat(i))
+                  case "DoubleType" => ps.setDouble(i+1, row.getDouble(i))
+                  //      case "DecimalType" => statement.setBigDecimal(i, )   //TODO: try to use getAccessor and find a similar method in statement
+                  case "StringType" => ps.setString(i+1, row.getString(i))
+                  case "BinaryType" => ps.setBytes(i+1, row.getBinary(i))
+                  case "BooleanType" => ps.setBoolean(i+1, row.getBoolean(i))
+                  //      case "TimestamType" => statement.setTimestamp(i+1, row.get.getTimestamp(i))
+                  //      case "DateType" => statement.setDate(i+1, row.getDate(i))
+                }
+                i += 1
               }
-
-              i += 1
+             // ps.setInt(2, pid)
+              ps.execute()
+            } catch {
+              case e: SQLException => log.error("Error writing to SQL DB on row: " + row.toString())
+                throw e   //TODO: Give users the option to abort or continue
             }
-            ps.setInt(2, pid)
-            ps.execute()
-          } catch {
-            case e: SQLException => log.error("Error writing to SQL DB on row: " + row.toString())
-              throw e   //TODO: Give users the option to abort or continue
           }
-        }
-        //streamToDB(sql, row, schemaDatatype)
+          //streamToDB(sql, row, schemaDatatype)
+        })
       })
-    })
     } catch {
       case e: Exception =>
         log.error("Error writing batch data to SQL DB. Error details: "+ e)
