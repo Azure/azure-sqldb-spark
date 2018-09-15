@@ -46,7 +46,7 @@ class SQLSinkTest extends StreamTest with SharedSQLContext {
   }
 
 
-  test("Structured Streaming - Write to Azure SQL DB with Connection String") {
+  test("Structured Streaming - Write to Azure SQL DB") {
     var config = Map(
       "url"          -> url,
       "databaseName" -> database,
@@ -96,39 +96,23 @@ class SQLSinkTest extends StreamTest with SharedSQLContext {
   }*/
 
 
-  test("Structured Streaming - Write to Azure SQL DB with variables defined"){
+  test("Structured Streaming - Incorrect username/password ; Ensure the right error surfaces"){
 
   }
 
-  test("Structured Streaming - Write to Azure SQL DB with Connection String & variables defined"){
+  test("Structured Streaming - Incorrect Server Name ; Ensure the right error surfaces"){
 
   }
 
-  test("Structured Streaming - Incorrect username/password"){
+  test("Structured Streaming - Incorrect Database Name ; Ensure the right error surfaces"){
 
   }
 
-  test("Structured Streaming - Incorrect Server Name"){
+  test("Structured Streaming - Incomplete options defined ; Ensure the right error surfaces"){
 
   }
 
-  test("Structured Streaming - Incorrect Database Name"){
-
-  }
-
-  test("Structured Streaming - Incomplete options defined"){
-
-  }
-
-  test("Structured Streaming - Incorrect Connection String"){
-
-  }
-
-  test("Structured Streaming - No Checkpoint location specified"){
-
-  }
-
-  test("Structured Streaming - Table does not exist"){
+  test("Structured Streaming - Table does not exist ; Ensure the right error surfaces"){
 
   }
 }
