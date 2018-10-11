@@ -122,7 +122,10 @@ Official supported versions
 
 ## Download
 ### Download from Maven
-*TBD*
+You can download the latest version from [here](https://search.maven.org/search?q=a:azure-sqldb-spark)
+
+You can also use the following coordinate to import the library into Azure SQL Databricks:
+com.microsoft.azure:azure-sqldb-spark:1.0.2
 
 ### Build this project
 Currently, the connector project uses maven. To build the connector without dependencies, you can run:
