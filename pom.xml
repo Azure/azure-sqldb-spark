@@ -46,7 +46,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.11</artifactId>
+            <artifactId>spark-sql_${scala.binary.version}</artifactId>
             <version>${spark.version}</version>
         </dependency>
         <dependency>
@@ -58,7 +58,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.11</artifactId>
+            <artifactId>spark-sql_${scala.binary.version}</artifactId>
             <version>${spark.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
@@ -79,13 +79,13 @@
         </dependency>
         <dependency>
             <groupId>org.scalactic</groupId>
-            <artifactId>scalactic_2.11</artifactId>
-            <version>3.0.4</version>
+            <artifactId>scalactic_${scala.binary.version}</artifactId>
+            <version>3.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
-            <version>3.0.4</version>
+            <artifactId>scalatest_${scala.binary.version}</artifactId>
+            <version>3.0.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>

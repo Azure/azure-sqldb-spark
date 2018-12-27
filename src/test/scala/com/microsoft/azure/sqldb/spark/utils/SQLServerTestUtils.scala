@@ -9,7 +9,7 @@ private[spark] class SQLServerTestUtils {
   val DRIVER_NAME = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
 
 
-  private def getConnection(writeConfig: Config): Connection = {
+  private def getConnection(writeConfig: Config, connectToDB: Boolean): Connection = {
     val url = writeConfig.get[String](SqlDBConfig.URL).get
     val db = writeConfig.get[String](SqlDBConfig.DatabaseName).get
     val properties = createConnectionProperties(writeConfig)
@@ -20,12 +20,41 @@ private[spark] class SQLServerTestUtils {
       return null
     }
     Class.forName(DRIVER_NAME)
-    var conn: Connection = DriverManager.getConnection(createJDBCUrl(url, Some(port))+";database="+db, user, password)
+    var dbConnect = ""
+    if(connectToDB){
+      dbConnect = ";database="+db
+    }
+    var conn: Connection = DriverManager.getConnection(createJDBCUrl(url, Some(port))+ dbConnect, user, password)
     return conn
   }
 
   def dropAllTables(): Unit = {
     //TODO
+    print("Dropping all tables")
+  }
+
+  private def preFlightChecks(config: Map[String, String]): Boolean = {
+    var writeConfig = Config(config)
+    val conn = getConnection(writeConfig, false)
+    val dbName = writeConfig.get[String](SqlDBConfig.DatabaseName).get
+    if(conn.equals(null)){
+      return false
+    }
+
+    //Check if Server and Database Exist
+    var sql = "SELECT name from master.dbo.sysdatabases where name='"+ dbName + "' OR [name]='"+ dbName + "'"
+    try{
+      val stmt = conn.createStatement()
+      val req = stmt.executeQuery(sql)
+      conn.close()
+      var res = req.getString(1)
+      if(res.eq(null) || res.eq("") || !res.eq(dbName)){
+        return false
+      }
+      return true
+    } catch {
+      case e: Exception => return false
+    }
   }
 
   def createTable(config: Map[String, String], columns: Map[String, String]): Boolean ={
@@ -34,24 +63,30 @@ private[spark] class SQLServerTestUtils {
     if(table.equals(null)) {
       return false
     }
-    val conn = getConnection(writeConfig)
+    val conn = getConnection(writeConfig, true)
     if(conn.equals(null)){
       return false
     }
     if(!dataTypeVerify(columns)){
       return false
     }
-    var columnDef = ""
-    for(column <- columns){
-      columnDef += column._1 + " " + column._2 + ", "
-    }
-    var sql = "CREATE TABLE " + table + "(" + columnDef.substring(0, columnDef.length-1) + ");"
-    try{
-      val stmt = conn.createStatement()
-      stmt.executeUpdate(sql)
-      conn.close()
-    } catch {
-      case e: Exception => return false
+
+    var tableDroppedIfExists = dropTable(config)
+    if(tableDroppedIfExists){
+      var columnDef = ""
+      for(column <- columns){
+        columnDef += column._1 + " " + column._2 + ", "
+      }
+      var sql = "CREATE TABLE " + table + "(" + columnDef.substring(0, columnDef.length-1) + ");"
+      try{
+        val stmt = conn.createStatement()
+        stmt.executeUpdate(sql)
+        conn.close()
+      } catch {
+        case e: Exception => return false
+      }
+    } else {
+      return false
     }
 
     return true
@@ -63,12 +98,13 @@ private[spark] class SQLServerTestUtils {
     if(table.equals(null)) {
       return false
     }
-    val conn = getConnection(writeConfig)
+    val conn = getConnection(writeConfig, true)
     if(conn.equals(null)){
       return false
     }
 
-    var sql = "DROP TABLE " + table + ";"
+   // var sql = "IF EXISTS(SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '" + table + "') DROP TABLE " + table + ";"
+    var sql = "DROP TABLE IF EXISTS " + table   //Supported SQL Server 2016 and beyond
     try{
       val stmt = conn.createStatement()
       stmt.executeUpdate(sql)
@@ -87,7 +123,7 @@ private[spark] class SQLServerTestUtils {
     if(table.equals(null)) {
       return false
     }
-    val conn = getConnection(writeConfig)
+    val conn = getConnection(writeConfig, true)
     if(conn.equals(null)){
       return false
     }
@@ -150,4 +186,8 @@ private[spark] class SQLServerTestUtils {
     }
     return true
   }
+}
+
+private[spark] object SQLServerTestUtils {
+
 }
