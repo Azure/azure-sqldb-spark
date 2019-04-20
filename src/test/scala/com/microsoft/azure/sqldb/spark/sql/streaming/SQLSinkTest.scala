@@ -51,16 +51,16 @@ class SQLSinkTest extends StreamTest with SharedSQLContext {
 
   val config = new SparkConf().setAppName("SQLSinkTest").setMaster("local[*]")
   val sc = new SparkContext(config)
-  implicit val sparkSession: SparkSession = SparkSession.builder().enableHiveSupport().config(sc.getConf).getOrCreate()
+  implicit val sparkSession: SparkSession = SparkSession.builder().config(sc.getConf).getOrCreate() //enableHiveSupport().
   import sparkSession.implicits._
 
   override val streamingTimeout: Span = 60.seconds
-  val url = "localhost"
-  val database = "test1"
-  val user = "test"
-  val password = "test"
+  val url = sys.env.getOrElse("DB_SERVER", "localhost")
+  val database = sys.env.getOrElse("DATABASE_NAME", "test1")
+  val user = sys.env.getOrElse("DB_USERNAME", "test")
+  val password = sys.env.getOrElse("DB_PASSWORD", "test")
   val dbTable = "dbo.newtesttable"
-  val portNum = "58502"
+  val portNum = sys.env.getOrElse("PORT_NUM", "58502")
 
   var tableConfig = Map(
     "url" -> url,
@@ -407,7 +407,7 @@ class SQLSinkTest extends StreamTest with SharedSQLContext {
   }
 
 
-  test("Structured Streaming - Timestamp formats and nanosecond support") {
+  test("Structured Streaming - Timestamp formats and millisecond support") {
     val columns = Map(
       "value" -> "datetime2(7)"
     )
