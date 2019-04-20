@@ -5,3 +5,7 @@ target/
 
 #IDE
 .idea/*
+
+.settings
+.project
+.classpath

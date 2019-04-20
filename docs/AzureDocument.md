@@ -187,6 +187,46 @@ df.bulkCopyToSqlDB(bulkCopyConfig, bulkCopyMetadata)
 //df.bulkCopyToSqlDB(bulkCopyConfig) if no metadata is specified.
 ```
 
+## Write Streaming data to Azure SQL Database or SQL Server
+This uses row-by-row insertion under the covers.
+
+Limitations:
+ - Only Append Mode is supported at this.
+ - Timestamp is supported in milliseconds. Nanoseconds is not supported at this time.
+ - Dataframe schema must map to SQL table schema. Writing to a partial set of columns in the SQL table is supported. In this case, please ensure your dataframe column names match the SQL DB column names you wish to write.
+ - Use the option `"ignoreColumnNames" -> "true"` in the config map to write all columns in the dataframe to the SQL table in that particular order (no columns will be ignored in this case).
+ - Arrays, structs, maps and user-defined data types are not supported at this time.
+ - Only SQL Authentication is supported at this time.
+
+```scala
+import com.microsoft.azure.sqldb.spark.config.Config
+
+// Declare your config. The following configs are mandatory. You can also include config settings such as "portNum"
+val config = Config(Map(
+  "url"                -> "mysqlserver.database.windows.net",
+  "databaseName"       -> "MyDatabase",
+  "dbTable"            -> "dbo.Clients"
+  "user"               -> "username",
+  "password"           -> "*********",
+  "checkpointLocation" -> "/checkpoint/"
+))
+
+// Setting up an input stream
+var stream: DataStreamWriter[Row] = null
+val input = MemoryStream[String]
+input.addData("1", "2", "3")
+var df = input.toDF()
+
+// Writing the stream of data to SQL DB
+stream = df.writeStream
+        .format("sqlserver")
+        .options(tableConfig)
+        .outputMode("Append")
+        .start()
+
+stream.awaitTermination()
+```
+
 ## Next steps
 If you haven't already, download the Spark connector for Azure SQL Database and SQL Server from [azure-sqldb-spark GitHub repository](https://github.com/Azure/azure-sqldb-spark) and explore the additional resources in the repo:
 

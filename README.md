@@ -108,6 +108,36 @@ val bulkCopyConfig = Config(Map(
 df.bulkCopyToSqlDB(bulkCopyConfig, bulkCopyMetadata)
 //df.bulkCopyToSqlDB(bulkCopyConfig) if no metadata is specified.
 ```
+### Streaming data to Azure SQL Database or SQL Server
+```scala
+import com.microsoft.azure.sqldb.spark.config.Config
+
+// Declare your config. The following configs are mandatory. You can also include config settings such as "portNum"
+// Only SQL Authentication is supported at this time.
+val config = Config(Map(
+  "url"                -> "mysqlserver.database.windows.net",
+  "databaseName"       -> "MyDatabase",
+  "dbTable"            -> "dbo.Clients"
+  "user"               -> "username",
+  "password"           -> "*********",
+  "checkpointLocation" -> "/checkpoint/"
+))
+
+// Setting up an input stream
+var stream: DataStreamWriter[Row] = null
+val input = MemoryStream[String]
+input.addData("1", "2", "3")
+var df = input.toDF()
+
+// Writing the stream of data to SQL DB
+stream = df.writeStream
+        .format("sqlserver")
+        .options(tableConfig)
+        .outputMode("Append")
+        .start()
+
+stream.awaitTermination()
+```
 
 ## Requirements
 Official supported versions

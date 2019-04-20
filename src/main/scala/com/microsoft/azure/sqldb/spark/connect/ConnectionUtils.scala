@@ -56,6 +56,14 @@ private[spark] object ConnectionUtils {
   def createJDBCUrl(url: String): String = SqlDBConfig.JDBCUrlPrefix + url
 
   /**
+    * Adds the "jdbc:sqlserver://" suffix to a general server url
+    *
+    * @param url the string url without the JDBC prefix
+    * @return the url with the added JDBC prefix
+    */
+  def createJDBCUrl(url: String, port: Option[String] = None): String = SqlDBConfig.JDBCUrlPrefix + url + ":" + port.getOrElse("1433").toString()
+
+  /**
     * Gets a JDBC connection based on Config properties
     *
     * @param config any read or write Config
