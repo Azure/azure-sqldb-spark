@@ -144,7 +144,7 @@ Official supported versions
 
 | Component | Versions Supported |
 | --------- | ------------------ |
-| Apache Spark | 2.0.2 or later |
+| Apache Spark | 2.3.1 or later |
 | Scala | 2.10 or later |
 | Microsoft JDBC Driver for SQL Server | 6.2 or later |
 | Microsoft SQL Server | SQL Server 2008 or later |
