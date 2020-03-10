@@ -69,7 +69,7 @@ private[spark] case class DataFrameFunctions[T](@transient dataFrame: DataFrame)
     } else {
       metadata
     }
-    dataFrame.foreachPartition(iterator => bulkCopy(config, iterator, actualMetadata))
+    dataFrame.foreachPartition((iterator: Iterator[Row]) => bulkCopy(config, iterator, actualMetadata))
   }
 
   private def getConnectionOrFail(config:Config):Try[Connection] = {

@@ -9,4 +9,4 @@ matrix:
     osx_image: xcode8
 
 script:
-- mvn clean package
+- sbt clean assembly

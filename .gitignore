@@ -1,7 +1,7 @@
 *.class
 *.log
 *.iml
-target/
+**/target/
 
 #IDE
 .idea/*
