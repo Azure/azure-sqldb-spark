@@ -45,6 +45,38 @@ public class SQLServerBulkDataFrameFileRecord implements ISQLServerBulkRecord, j
 
     private Map<Integer, ColumnMetadata> columnMetadata;
 
+    /*
+     * Logger
+     */
+    protected String loggerPackageName = "com.microsoft.jdbc.SQLServerBulkRecord";
+    protected static java.util.logging.Logger loggerExternal = java.util.logging.Logger
+            .getLogger("com.microsoft.jdbc.SQLServerBulkRecord");
+
+    /*
+     * Contains the format that java.sql.Types.TIMESTAMP_WITH_TIMEZONE data should be read in as.
+     */
+    protected DateTimeFormatter dateTimeFormatter = null;
+
+    /*
+     * Contains the format that java.sql.Types.TIME_WITH_TIMEZONE data should be read in as.
+     */
+    protected DateTimeFormatter timeFormatter = null;
+
+    void addColumnMetadataInternal(int positionInSource, String name, int jdbcType, int precision, int scale,
+            DateTimeFormatter dateTimeFormatter) throws SQLServerException {}
+
+    @Override
+    public void addColumnMetadata(int positionInSource, String name, int jdbcType, int precision, int scale,
+            DateTimeFormatter dateTimeFormatter) throws SQLServerException {
+        addColumnMetadataInternal(positionInSource, name, jdbcType, precision, scale, dateTimeFormatter);
+    }
+
+    @Override
+    public void addColumnMetadata(int positionInSource, String name, int jdbcType, int precision,
+            int scale) throws SQLServerException {
+        addColumnMetadataInternal(positionInSource, name, jdbcType, precision, scale, null);
+    }
+
     public SQLServerBulkDataFrameFileRecord(Iterator<Row> iterator, BulkCopyMetadata metadata) {
         this.iterator = iterator;
         this.columnMetadata = metadata.getMetadata();
@@ -52,6 +84,11 @@ public class SQLServerBulkDataFrameFileRecord implements ISQLServerBulkRecord, j
 
     public DateTimeFormatter getDateTimeFormatter(int column) {
         return columnMetadata.get(column).getDateTimeFormatter();
+    }
+
+    @Override
+    public DateTimeFormatter getColumnDateTimeFormatter(int column) {
+        return columnMetadata.get(column).dateTimeFormatter;
     }
 
     @Override
@@ -151,6 +188,40 @@ public class SQLServerBulkDataFrameFileRecord implements ISQLServerBulkRecord, j
     @Override
     public boolean next() throws SQLServerException {
         return iterator.hasNext();
+    }
+
+    @Override
+    public void setTimestampWithTimezoneFormat(String dateTimeFormat) {
+        loggerExternal.entering(loggerPackageName, "setTimestampWithTimezoneFormat", dateTimeFormat);
+        this.dateTimeFormatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+        loggerExternal.exiting(loggerPackageName, "setTimestampWithTimezoneFormat");
+    }
+
+
+    @Override
+    public void setTimestampWithTimezoneFormat(DateTimeFormatter dateTimeFormatter) {
+        if (loggerExternal.isLoggable(java.util.logging.Level.FINER)) {
+            loggerExternal.entering(loggerPackageName, "setTimestampWithTimezoneFormat",
+                    new Object[] {dateTimeFormatter});
+        }
+        this.dateTimeFormatter = dateTimeFormatter;
+        loggerExternal.exiting(loggerPackageName, "setTimestampWithTimezoneFormat");
+    }
+
+    @Override
+    public void setTimeWithTimezoneFormat(String timeFormat) {
+        loggerExternal.entering(loggerPackageName, "setTimeWithTimezoneFormat", timeFormat);
+        this.timeFormatter = DateTimeFormatter.ofPattern(timeFormat);
+        loggerExternal.exiting(loggerPackageName, "setTimeWithTimezoneFormat");
+    }
+
+    @Override
+    public void setTimeWithTimezoneFormat(DateTimeFormatter dateTimeFormatter) {
+        if (loggerExternal.isLoggable(java.util.logging.Level.FINER)) {
+            loggerExternal.entering(loggerPackageName, "setTimeWithTimezoneFormat", new Object[] {dateTimeFormatter});
+        }
+        this.timeFormatter = dateTimeFormatter;
+        loggerExternal.exiting(loggerPackageName, "setTimeWithTimezoneFormat");
     }
 
     private String getSQLServerExceptionErrorMsg(String type) {

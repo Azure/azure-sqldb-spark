@@ -33,7 +33,7 @@ class ColumnMetadata implements Serializable {
     private int columnType;
     private int precision;
     private int scale;
-    private DateTimeFormatter dateTimeFormatter;
+    public DateTimeFormatter dateTimeFormatter;
 
     ColumnMetadata(String name, int type, int precision, int scale, DateTimeFormatter dateTimeFormatter) {
         this.columnName = name;
