@@ -4,9 +4,9 @@ sudo: required
 matrix:
   include:
   - os: linux
-    jdk: oraclejdk8
+    jdk: oraclejdk9
   - os: osx
-    osx_image: xcode8
+    osx_image: xcode9
 
 script:
 - mvn clean package
