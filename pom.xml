@@ -17,12 +17,14 @@
     </licenses>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <scala.version>2.11.8</scala.version>
+        <scala.binary.version>2.11</scala.binary.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>2.11.8</version>
+            <version>${scala.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -32,24 +34,24 @@
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-core_2.11</artifactId>
+            <artifactId>spark-core_${scala.binary.version}</artifactId>
             <version>2.2.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.11</artifactId>
+            <artifactId>spark-sql_${scala.binary.version}</artifactId>
             <version>2.2.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.scalactic</groupId>
-            <artifactId>scalactic_2.11</artifactId>
+            <artifactId>scalactic_${scala.binary.version}</artifactId>
             <version>3.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.11</artifactId>
+            <artifactId>scalatest_${scala.binary.version}</artifactId>
             <version>3.0.4</version>
             <scope>test</scope>
         </dependency>
@@ -199,7 +201,7 @@
                 <version>3.2.2</version>
                 <configuration>
                     <checkMultipleScalaVersions>false</checkMultipleScalaVersions>
-                    <scalaVersion>2.11.8</scalaVersion>
+                    <scalaVersion>${scala.version}</scalaVersion>
                     <args>
                         <arg>-deprecation</arg>
                         <arg>-feature</arg>
