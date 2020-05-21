@@ -17,8 +17,8 @@
     </licenses>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <scala.version>2.11.8</scala.version>
         <scala.binary.version>2.11</scala.binary.version>
+        <scala.version>2.11.8</scala.version>
         <spark.version>2.2.2</spark.version>
     </properties>
     <dependencies>
