@@ -87,8 +87,8 @@ private[spark] object BulkCopyUtils extends LoggingTrait {
         .getOrElse(SqlDBConfig.BulkCopyCheckConstraintsDefault.toString).toBoolean
     )
     copyOptions.setFireTriggers(
-      config.get[String](SqlDBConfig.BulkCopyKeepIdentity)
-        .getOrElse(SqlDBConfig.BulkCopyKeepIdentityDefault.toString).toBoolean
+      config.get[String](SqlDBConfig.BulkCopyFireTriggers)
+        .getOrElse(SqlDBConfig.BulkCopyFireTriggersDefault.toString).toBoolean
     )
     copyOptions.setKeepIdentity(
       config.get[String](SqlDBConfig.BulkCopyKeepIdentity)
