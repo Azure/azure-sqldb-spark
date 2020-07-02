@@ -1,3 +1,5 @@
+Updated Jun 2020: This project is not being actively maintained. Instead, [Apache Spark Connector for SQL Server and Azure SQL](https://github.com/microsoft/sql-spark-connector) is now available, with support for Python and R bindings, an easier-to use interface to bulk insert data, and many other improvements. We encourage you to actively evaluate and use the new connector.
+
 # Spark connector for Azure SQL Databases and SQL Server
 
 [![Build Status](https://travis-ci.org/Azure/azure-sqldb-spark.svg?branch=master)](https://travis-ci.org/Azure/azure-sqldb-spark)
@@ -116,9 +118,11 @@ Official supported versions
 | --------- | ------------------ |
 | Apache Spark | 2.0.2 or later |
 | Scala | 2.10 or later |
-| Microsoft JDBC Driver for SQL Server | 6.2 or later |
+| Microsoft JDBC Driver for SQL Server | 6.2 to 7.4 ^|
 | Microsoft SQL Server | SQL Server 2008 or later |
 | Azure SQL Databases | Supported |
+
+^ Driver version 8.x not tested
 
 ## Download
 ### Download from Maven
