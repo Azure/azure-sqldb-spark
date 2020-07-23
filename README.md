@@ -77,7 +77,7 @@ val config = Config(Map(
   "queryCustom"  -> query
 ))
 
-sqlContext.azurePushdownQuery(config)
+sqlContext.sqlDBQuery(config)
 ```
 ### Bulk Copy to Azure SQL Database or SQL Server
 ```scala
